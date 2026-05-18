@@ -39,7 +39,8 @@ function onConnect(client) {
 
         // soma.com:8080 => hello soma
         if (req.headers.Host == 'soma.com:8080') {
-            client.write('HTTP/1.1 200 OK\r\nContent-Length:11\r\n\r\nhello soma');
+            const body = '<h1>hello soma</h1>';
+            client.write(`HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:${body.length}\r\n\r\n${body}`);
         // foo.com:8080 => hello foo
         } else if (req.headers.Host == 'foo.com:8080') {
             client.write('HTTP/1.1 200 OK\r\nContent-Length:9\r\n\r\nhello foo');
