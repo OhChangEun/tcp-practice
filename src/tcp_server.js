@@ -34,10 +34,19 @@ function onConnect(client) {
         const data = buffer.toString();
         console.log(`[${addr}] Received:`, data);
 
-        const { method, url, headers } = getHttpMessage(data);
-        console.log('Method:', method, '| URL:', url, '| Headers:', headers);
+        const req = getHttpMessage(data);
+        console.log(req);
 
-        client.write(`Echo: ${data}`);
+        // soma.com:8080 => hello soma
+        if (req.headers.Host == 'soma.com:8080') {
+            client.write('HTTP/1.1 200 OK\r\nContent-Length:11\r\n\r\nhello soma');
+        // foo.com:8080 => hello foo
+        } else if (req.headers.Host == 'foo.com:8080') {
+            client.write('HTTP/1.1 200 OK\r\nContent-Length:9\r\n\r\nhello foo');
+        // any
+        } else {
+            client.write('HTTP/1.1 200 OK\r\nContent-Length:5\r\n\r\nhello');
+        }
     });
 
     client.on('end', () => {
