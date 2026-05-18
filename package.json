@@ -1,0 +1,12 @@
+{
+    "name": "tcp-practice",
+    "version": "1.0.0",
+    "description": "Node.js TCP 서버/클라이언트 실습 프로젝트",
+    "main": "src/tcp_server.js",
+    "scripts": {
+        "server": "node src/tcp_server.js",
+        "client": "node src/tcp_client.js"
+    },
+    "keywords": ["tcp", "nodejs", "networking"],
+    "license": "ISC"
+}
