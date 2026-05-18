@@ -9,6 +9,23 @@ function initServer() {
     });
 }
 
+// GET / HTTP/1.1
+// Host: 127.0.0.1:8080
+function getHttpMessage(data) {
+    const lines = data.split('\r\n');
+    const start_line = lines[0];
+    const [method, url, version] = start_line.split(' ');
+    const headers = {};
+
+    for (let i=1; i<lines.length; i++) {
+        const line = lines[i];
+        const [k,v] = line.split(': ');
+        headers[k] = v;
+    }
+
+    return {method, url, headers};
+}
+
 function onConnect(client) {
     const addr = `${client.remoteAddress}:${client.remotePort}`;
     console.log(`Connected: ${addr}`);
@@ -17,7 +34,9 @@ function onConnect(client) {
         const data = buffer.toString();
         console.log(`[${addr}] Received:`, data);
 
-        // 클라이언트에게 응답 보내기
+        const { method, url, headers } = getHttpMessage(data);
+        console.log('Method:', method, '| URL:', url, '| Headers:', headers);
+
         client.write(`Echo: ${data}`);
     });
 
