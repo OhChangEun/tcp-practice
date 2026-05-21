@@ -1,4 +1,6 @@
 const net = require("net");
+const fs = require("fs");
+const path = require("path");
 
 initServer();
 
@@ -49,6 +51,15 @@ function onConnect(client) {
       );
       // foo.com:8080 => hello foo
     } else if (req.headers.Host == "foo.com:8080") {
+      if (req.url == "/index.html") {
+        const filePath = path.join(__dirname, "../static/index.html");
+        fs.stat(filePath, (err, stats) => {
+          client.write(`HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:${stats.size}\r\n\r\n`);
+          const readable = fs.createReadStream(filePath);
+          readable.pipe(client, { end: false });
+        });
+        return;
+      }
       client.write("HTTP/1.1 200 OK\r\nContent-Length:9\r\n\r\nhello foo");
       // any
     } else {
